@@ -1,31 +1,30 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'windows-latest'  # Using the latest Windows VM image for each job
+  vmImage: 'windows-latest'
 
 jobs:
 - job: Build
-  pool:
-    vmImage: 'windows-latest'
   steps:
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'clean install'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean install'
 
 - job: Test
   dependsOn: Build  # Ensures the Test job runs after the Build job
-  pool:
-    vmImage: 'windows-latest'
   steps:
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'test'
-      options: '-Dsurefire.suiteXmlFiles=testng.xml'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'test'
+        options: '-Dsurefire.suiteXmlFiles=testng.xml'
+
+- job: PublishResults
+  dependsOn: Test  # Ensures the PublishResults job runs after Test
+  steps:
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFiles: '**/TEST-*.xml'
+        testRunTitle: 'TestNG Test Results'
