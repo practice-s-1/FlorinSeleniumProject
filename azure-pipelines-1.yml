@@ -1,10 +1,10 @@
 trigger:
   branches:
     include:
-      - main
+      - main  # Runs when changes are pushed to the 'main' branch
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-latest'  # Define the image (like Windows for testing)
 
 jobs:
 - job: Build
@@ -13,23 +13,23 @@ jobs:
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'clean install'
-  displayName: 'Build Job'
+  displayName: 'Build Job'  # The first job (no dependsOn)
 
 - job: Test
-  dependsOn: Build  # This job depends on the Build job and will run after it finishes
+  dependsOn: Build  # The Test job depends on the successful completion of the Build job
   steps:
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'test'
-        options: '-Dsurefire.suiteXmlFiles=testng.xml'
+        options: '-Dsurefire.suiteXmlFiles=testng.xml'  # Path to your TestNG suite if needed
   displayName: 'Test Job'
 
 - job: PublishResults
-  dependsOn: Test  # This job depends on the Test job and will run after it finishes
+  dependsOn: Test  # The PublishResults job depends on the successful completion of the Test job
   steps:
     - task: PublishTestResults@2
       inputs:
-        testResultsFiles: '**/TEST-*.xml'
+        testResultsFiles: '**/TEST-*.xml'  # Path to the test results from the Test job
         testRunTitle: 'TestNG Test Results'
   displayName: 'Publish Test Results'
