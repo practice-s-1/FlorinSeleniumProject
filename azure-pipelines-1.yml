@@ -1,5 +1,7 @@
 trigger:
-  - master
+  branches:
+    include:
+      - main
 
 pool:
   vmImage: 'windows-latest'
@@ -11,20 +13,23 @@ jobs:
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'clean install'
+  displayName: 'Build Job'
 
 - job: Test
-  dependsOn: Build  # Ensures the Test job runs after the Build job
+  dependsOn: Build  # This job depends on the Build job and will run after it finishes
   steps:
     - task: Maven@3
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'test'
         options: '-Dsurefire.suiteXmlFiles=testng.xml'
+  displayName: 'Test Job'
 
 - job: PublishResults
-  dependsOn: Test  # Ensures the PublishResults job runs after Test
+  dependsOn: Test  # This job depends on the Test job and will run after it finishes
   steps:
     - task: PublishTestResults@2
       inputs:
         testResultsFiles: '**/TEST-*.xml'
         testRunTitle: 'TestNG Test Results'
+  displayName: 'Publish Test Results'
