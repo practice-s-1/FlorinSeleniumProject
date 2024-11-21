@@ -1,0 +1,35 @@
+trigger:
+  branches:
+    include:
+      - master  # Trigger on the main branch
+
+pool:
+  vmImage: 'windows-latest'  # Use the latest Windows VM image with browsers
+
+steps:
+# Step 1: Install dependencies using Maven
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'  # Path to the pom.xml
+    goals: 'clean test'      # Clean and run tests
+    options: '-Dsurefire.suiteXmlFiles=testng.xml'  # Specify TestNG suite if needed
+
+# Step 2: Install necessary dependencies (ChromeDriver or other browser drivers)
+- script: |
+    curl -sSL https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_win32.zip -o chromedriver.zip
+    unzip chromedriver.zip
+    mv chromedriver.exe /usr/local/bin/chromedriver
+  displayName: 'Install ChromeDriver'
+
+# Step 3: Run the tests using Maven
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'test'           # Run tests using the TestNG suite defined in the pom.xml
+    options: '-Dsurefire.suiteXmlFiles=testng.xml'
+
+# Step 4: Publish test results
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/TEST-*.xml'  # Publish the results from the TestNG XML reports
+    testRunTitle: 'Selenium TestNG Results'
