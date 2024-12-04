@@ -8,7 +8,7 @@ import utils.BasePage;
 
 public class MyAccountPage extends BasePage {
 
-    @FindBy(className = "maintext")
+    @FindBy(className = "site-description")
     WebElement myAccountTitle;
 
     public MyAccountPage(WebDriver driver) {

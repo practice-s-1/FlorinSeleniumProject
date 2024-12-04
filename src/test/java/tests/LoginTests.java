@@ -18,12 +18,12 @@ public class LoginTests extends BaseTest {
         driver.get(loginURL);
         loginPage = new LoginPage(driver);
 
-        loginPage.fillCredentials("AlisaT123", "AlisaT123");
+        loginPage.fillCredentials("cursant1", "Tester123");
         loginPage.clickLoginButton();
 
         myAccountPage = new MyAccountPage(driver);
 
-        Assert.assertEquals("MY ACCOUNT", myAccountPage.getMyAccountTitlePage(),
+        Assert.assertEquals(myAccountPage.getMyAccountTitlePage(), "Practice website for testing sessions",
                 "The title page is wrong!");
     }
 }

@@ -9,13 +9,13 @@ import utils.BasePage;
 public class LoginPage extends BasePage {
 
     // search elements
-    @FindBy(id = "loginFrm_loginname")
+    @FindBy(id = "user_login")
     WebElement usernameTextBox;
 
-    @FindBy(id = "loginFrm_password")
+    @FindBy(id = "user_pass")
     WebElement passwordTextBox;
 
-    @FindBy(xpath = "//*[@title='Login']")
+    @FindBy(id = "wppb-submit")
     WebElement loginButton;
 
     // constructor
