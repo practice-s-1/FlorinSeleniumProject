@@ -4,6 +4,9 @@ trigger:
       - main  # Specify the branch you want to trigger on
 
 pool:
+  name: Default # Replace with your agent pool name
+  demands:
+    - Agent.OS -equals Windows_NT
   vmImage: 'windows-latest'  # Define your VM image
 
 jobs:
