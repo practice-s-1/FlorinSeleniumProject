@@ -40,6 +40,7 @@
                     <suiteXmlFile>testng.xml</suiteXmlFile>  <!-- Path to your TestNG XML suite -->
                 </suiteXmlFiles>
                 <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                <parallel>none</parallel>
             </configuration>
         </plugin>
     </plugins>
