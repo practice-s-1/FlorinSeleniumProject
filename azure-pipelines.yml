@@ -1,0 +1,38 @@
+trigger:
+  branches:
+    include:
+      - main  # Specify the branch you want to trigger on
+
+pool:
+  name: Default # Replace with your agent pool name
+  demands:
+    - Agent.OS -equals Windows_NT
+  vmImage: 'windows-latest'  # Define your VM image
+
+jobs:
+  - job: Build
+    steps:
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'clean install'
+    displayName: 'Build Job'
+
+  - job: Test
+    dependsOn: Build  # Ensure the Test job runs after the Build job
+    steps:
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'test'
+          options: '-Dsurefire.suiteXmlFiles=testng.xml'
+    displayName: 'Test Job'
+
+  - job: PublishResults
+    dependsOn: Test  # Ensure the PublishResults job runs after the Test job
+    steps:
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFiles: '/TEST-*.xml'
+          testRunTitle: 'TestNG Test Results'
+    displayName: 'Publish Test Results'
